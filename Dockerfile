@@ -10,6 +10,11 @@ RUN \
     apt-get -y update && \
     apt-get -y install jq procps supervisor tmux libnss3
 
+RUN useradd --uid 1000 nem
+RUN mkdir -p /home/nem/nem/ncc/
+RUN mkdir -p /home/nem/nem/nis/
+RUN chown nem /home/nem/nem -R
+
 # Download Nem, check signature and extract
 RUN \
     version=$(curl -s http://bob.nem.ninja/version.txt) && \
@@ -17,23 +22,16 @@ RUN \
     sha=$(curl -s http://bigalice3.nem.ninja:7890/transaction/get?hash=$(curl -s  http://bob.nem.ninja/nis-ncc-$version.tgz.sig | grep txId | sed -e 's/txId: //') | jq -r '.transaction.message.payload[10:]') && \
     echo "$sha nis-ncc-$version.tgz"  > /tmp/sum && \
     sha256sum -c /tmp/sum && \
-    tar zxf nis-ncc-$version.tgz
-
-RUN useradd --uid 1000 nem
-RUN mkdir -p /home/nem/nem/ncc/
-RUN mkdir -p /home/nem/nem/nis/
-RUN chown nem /home/nem/nem -R
-
-# Cleanup temp
-#RUN rm -Rf /tmp/*
-
-#WORKDIR /home/nem
+    tar zxf nis-ncc-$version.tgz && \
+    rm -f nis-ncc-$version.tgz && \
+    chown nem /package -R
 
 # servant
 RUN \
     curl http://bob.nem.ninja/$SERVANT > $SERVANT && \
-    unzip $SERVANT
-
+    unzip $SERVANT && \
+    rm -f $SERVANT && \
+    chown nem /servant -R
 
 # the sample is used as default config in the container
 COPY ./custom-configs/supervisord.conf.sample /etc/supervisord.conf

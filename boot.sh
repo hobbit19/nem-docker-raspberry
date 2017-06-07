@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -eu
 
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root or with sudo"
+  exit
+fi
+
 if [[ $# < 1 ]]; then
   echo "Usage: $0 [pi1|pizero|pi2|pi3]"
   exit 1
