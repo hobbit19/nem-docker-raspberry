@@ -1,19 +1,17 @@
 
 # Info
 
-A docker file to help you setup a nem NIS node and the NEM Community Client.
-
-Here is a screencast showing how to start NCC:
-
-![Imgur](http://i.imgur.com/ZBANMK4.gif?1)
+A docker file to help you setup a nem NIS node and the NEM Community Client on a Raspberry Pi. It's only tested on a Rasberry Pi 3.
 
 Note that the first time you build the docker container, it will take more time than shown in the screencast. Subsequent runs will build faster though.
 
 # How to run
 
-Of course you need docker installed.
+Of course you need docker installed. Install it with:
 
-Clone this repository, get in the repo's directory.
+    curl -sSL https://get.docker.com | sh
+
+If docker is installed, clone this repository and get in the repo's directory.
 
 Depending on the way you have configured docker, you might need to run these commands as root (or equivalently prefixed by sudo).
 
@@ -30,7 +28,7 @@ and to start both NIS and NCC, run:
     ./boot.sh nis ncc
 
 
-The first time you run NIS you will be prompted for a node name (required) and a boot key (optional, 
+The first time you run NIS you will be prompted for a node name (required) and a boot key (optional,
 one will be generated if left empty).
 
 This will start the NIS/NCC process(es) in the docker container named mynem_container.
@@ -51,7 +49,7 @@ To check which services are running, issue the command:
 To stop NIS, issue the command:
 
     ./service.sh stop nis
-    
+
 To start NIS again, issue the command:
 
     ./service.sh start nis
@@ -66,12 +64,9 @@ To run servant in the docker, you have to copy `custom-configs/servant.config.pr
 
 # Importing a previously exported wallet
 
-Before you do this, be sure you have a backup of your wallet in a safe place! Things can go wrong, and you should not use this 
-if you do not have a backup of your wallets in a safe place! You've been warned and use this at your own risk!
+Before you do this, be sure you have a backup of your wallet in a safe place! Things can go wrong, and you should not use this if you do not have a backup of your wallets in a safe place! You've been warned and use this at your own risk!
 
-When the container is started and running NCC, a new subdirectory is made where you can put your wallets to make them usable 
-with NCC. To import an exported wallet, just unzip the exported zip file in `./nem/ncc/`. Reloading the NCC page in your browser is 
-sufficient to have the wallet listed.
+When the container is started and running NCC, a new subdirectory is created where you can put your wallets to make them usable with NCC. To import an exported wallet, just unzip the exported zip file in `./nem/ncc/`. Reloading the NCC page in your browser is sufficient to have the wallet listed.
 
 # Tweaking the config
 
@@ -96,7 +91,7 @@ vim custom-configs/supervisord.conf
 
 ```
 
-The blockchain used by NIS is saved in the nem directory, so this data is persisted across restarts of the container.
+The blockchain used by NIS is saved in the nem directory, so this data is persisted across restarts of the container. The [database of the blockchain](http://bob.nem.ninja/ "Nem Repository") can be downloaded to speed up the sync process. The database should be placed in folder `./nem/nis/data`.
 
 # The "nem" directory
 
