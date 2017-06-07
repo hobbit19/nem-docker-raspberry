@@ -2,10 +2,8 @@
 # Based on NEM Script for Dockerfile https://github.com/rb2nem/nem-docker
 FROM resin/raspberry-pi-openjdk
 MAINTAINER ixidion
-#RUN dnf -y install java-1.8.0-openjdk-headless.x86_64 tar tmux supervisor procps jq unzip gnupg.x86_64
-#RUN dnf -y upgrade nss
 
-#WORKDIR /tmp
+ARG SERVANT=servant_0_0_4.zip
 
 # Prepare Environment
 RUN \
@@ -33,8 +31,8 @@ RUN chown nem /home/nem/nem -R
 
 # servant
 RUN \
-    curl -L https://github.com/rb2nem/nem-servant/raw/master/servant.zip > servant.zip && \
-    unzip servant.zip &&
+    curl http://bob.nem.ninja/$SERVANT > $SERVANT && \
+    unzip $SERVANT
 
 
 # the sample is used as default config in the container
@@ -49,4 +47,4 @@ EXPOSE 7880
 EXPOSE 8989
 
 #User nem
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-n"]
